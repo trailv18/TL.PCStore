@@ -1,0 +1,76 @@
+﻿<style>
+    .active-link {
+        background-color: #007bff;
+    }
+</style>
+
+<div id="layoutSidenav_nav">
+    <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+        <div class="sb-sidenav-menu">
+            <div class="nav">
+                <div class="sb-sidenav-menu-heading"></div>
+                <a class="nav-link" id="admin" href="@Url.Action("index", "admin")">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Bảng điều khiển
+                </a>
+                <div class="sb-sidenav-menu-heading">Quản lý</div>
+                
+                <div class="">
+                    @Html.ActionLink("Quyền", "index", "roleManager", routeValues: null, htmlAttributes: new { id = "role", @class = "nav-link" })
+                    @Html.ActionLink("Loại sản phẩm", "index", "categoryAdmin", routeValues: null, htmlAttributes: new { id = "category", @class = "nav-link" })
+                    @Html.ActionLink("Thương hiệu", "index", "brandAdmin", routeValues: null, htmlAttributes: new { id = "brand", @class = "nav-link" })
+                    @Html.ActionLink("Sản phẩm", "index", "productAdmin", routeValues: null, htmlAttributes: new { id = "product", @class = "nav-link" })
+                    @Html.ActionLink("Bài viết", "index", "newsAdmin", routeValues: null, htmlAttributes: new { id = "news", @class = "nav-link" })
+                    @Html.ActionLink("Đơn hàng", "index", "orderAdmin", routeValues: null, htmlAttributes: new { id = "order", @class = "nav-link" })
+
+                </div>
+
+
+            </div>
+        </div>
+        <div class="sb-sidenav-footer">
+            <div class="small">Admin </div> PCStore
+        </div>
+    </nav>
+</div>
+
+
+
+<script>
+    if (window.location.href.search(/(admin)/) != -1) {
+        let admin = document.getElementById("admin");
+        admin.classList.add("active-link", "active");
+    }
+
+
+    if (window.location.href.search(/(roleManager)/) != -1) {
+        let role = document.getElementById("role");
+        role.classList.add("active-link", "active");
+    }
+
+    if (window.location.href.search(/(categoryAdmin)/) != -1) {
+        let category = document.getElementById("category");
+        category.classList.add("active-link", "active");
+    }
+
+    if (window.location.href.search(/(brandAdmin)/) != -1) {
+        let brand = document.getElementById("brand");
+        brand.classList.add("active-link", "active");
+    }
+
+    if (window.location.href.search(/(productAdmin)/) != -1) {
+        let product = document.getElementById("product");
+        product.classList.add("active-link", "active");
+    }
+
+    if (window.location.href.search(/(newsAdmin)/) != -1) {
+        let news = document.getElementById("news");
+        news.classList.add("active-link", "active");
+
+    }
+        if (window.location.href.search(/(orderAdmin)/) != -1) {
+            let news = document.getElementById("order");
+            news.classList.add("active-link", "active");
+        }
+
+</script>

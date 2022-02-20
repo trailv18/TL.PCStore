@@ -1,0 +1,228 @@
+﻿@model PagedList.IPagedList<TL.PCStore.Models.Category>
+@using PagedList.Mvc;
+
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .field-icon {
+        float: right;
+        margin-left: -25px;
+        position: relative;
+        background: none;
+        border: none;
+        z-index: 2;
+    }
+    .thead-color {
+        background-color: #243a76;
+        color: white;
+        border-color: #243a76;
+    }
+</style>
+
+<div class="container-fluid">
+    <h2 class="text-center my-3 text-uppercase">Loại sản phẩm</h2>
+
+    <div class="d-flex flex-row justify-content-end">
+        @using (Html.BeginForm("index", "categoryAdmin", FormMethod.Get, new { id = "formSearch" }))
+        {
+            <div class="d-flex flex-row py-3" style="width: 450px; margin-bottom: -50px">
+                @Html.TextBox("search", null, htmlAttributes: new { @class = "form-control", placeholder = "Nhập tên loại..." })
+                <button type="button" class="field-icon" onclick="clearSearch()"><i class="fas fa-times"></i></button>
+                <input style="margin-left: 10px;" class="btn btn-primary" type="submit" value="Tìm kiếm" />
+            </div>
+        }
+    </div>
+
+
+    @using (Html.BeginForm("deleteSelectedCategory", "categoryAdmin", FormMethod.Post))
+    {
+        <div class="d-flex flex-row ">
+            <div class="d-flex align-items-center">
+                <a href="@Url.Action("create", "categoryAdmin")" class="btn btn-primary text-decoration-none"><i class="fas fa-plus"></i> Thêm mới</a>
+            </div>
+
+            <a style="color:white" class="btn btn-danger px-4 mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-trash-alt"></i> Xóa </a>
+
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Xóa</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="message">
+                            Chọn loại sản phẩm cần xóa.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            <button type="submit" value="Xóa" class="btn btn-danger" id="btnDelete" hidden> Xóa</button>
+                            <button type="button" class="btn btn-danger" id="btnReload" onclick="loadPage()" hidden> Tải lại</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table width="100%" class="table-sm table-bordered" id="sort">
+            <thead class="thead-color">
+                <tr>
+                    <th id="first" style="max-width:15px" class="no-sort text-center">#</th>
+                    <th style="width:50px" class="text-center">STT</th>
+                    <th style="width:500px">Loại sản phẩm</th>
+                    <th style="width:100px" class="no-sort text-center">Ẩn</th>
+                    <th style="width:170px">Ngày tạo</th>
+                    <th style="width:170px">Ngày sửa</th>
+                    <th style="width:100px" class="no-sort text-center">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Select((x, i) => new { Data = x, Index = i }))
+                {
+                    <tr>
+                        <td style="width:15px" class="text-center">
+                            <input type="checkbox" name="ids" value="@item.Data.Id" onchange="getById(@(item.Data.Id))" />
+                        </td>
+                        <td style="width:50px" class="text-center">
+                            @(item.Index + ((Model.PageNumber - 1) * Model.PageSize) + 1)
+                        </td>
+                        <td style="width:500px">
+                            @Html.DisplayFor(modelItem => item.Data.Name)
+                        </td>
+                        <td style="width:100px" class="text-center">
+                            <div style="padding:0" class="form-check form-switch">
+                                <input class="deleteCheckbox" id="@item.Data.Id" type="checkbox" @(item.Data.DeleteFlag ? "checked=\"checked\"" : "") onchange="updateDeleteFlag(@(item.Data.Id))" />
+                            </div>
+                        </td>
+                        <td style="width:170px">
+                            @Html.DisplayFor(modelItem => item.Data.CreateDate)
+                        </td>
+                        <td style="width:170px">
+                            @Html.DisplayFor(modelItem => item.Data.UpdateDate)
+                        </td>
+                        <td style="width:100px" class="text-center">
+                            <a href="@Url.Action("edit", "categoryAdmin", new { id = item.Data.Id})" class="btn">
+                                <i style="color:blue;" class="fas fa-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <div class="row d-flex align-items-center border-top border-bottom">
+        <div class="col-md-4 d-flex flex-row align-items-center">
+            <label style="margin-right: 20px">Hiển thị </label>
+            @using (Html.BeginForm("index", "categoryAdmin", FormMethod.Get, new { id = "form1" }))
+            {
+                <div style="width:70px" class="py-2">
+                    @Html.DropDownList("pageSize", null, htmlAttributes: new { @class = "form-select" })
+                </div>
+            }
+        </div>
+        <div class="col-md-4 text-end">
+            Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/@Model.PageCount
+            Hiển thị @ViewBag.itemPage tổng @ViewBag.total
+        </div>
+
+        <div class="col-md-4">
+            @Html.PagedListPager(Model, page => Url.Action("index",
+            new { page, search = Request.Params["search"], pageSize = Request.Params["pageSize"] }))
+
+        </div>
+    </div>
+
+</div>
+
+@Html.Partial("_ShowSuccess")
+@Html.Partial("_ShowError")
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        document.getElementById('first').classList.remove('sorting_asc');
+    });
+    $(function () {
+        $("#pageSize").change(function () {
+            $("#form1").submit();
+        });
+    });
+
+    $('#sort').DataTable({
+        searching: false,
+        paging: false,
+        info: false,
+        columnDefs: [{
+            "targets": 'no-sort',
+            "orderable": false,
+        }]
+    });
+
+    function clearSearch() {
+        document.getElementById('search').value = '';
+    }
+
+    function getById(id) {
+        $.ajax({
+            url: "/categoryAdmin/findById",
+            data: { id: id },
+            type: "POST",      
+            success: function (result) {
+                console.log(result);
+                if (result) {
+                    $("#message").text("Bạn có muốn xóa không?");
+                    document.getElementById('btnDelete').hidden = false;
+                } else {
+                    $("#message").text("Không tồn tại loại sản phẩm. Tải lại trang?")
+                    document.getElementById('btnReload').hidden = false;
+                }
+            },
+            error: function (errormessage) {
+                console.log(id);
+                console.log(errormessage);
+            }
+        });
+    }
+
+    function loadPage() {
+        location.reload()
+    }
+
+    function updateDeleteFlag(idCheck) {
+        let check;
+
+        if (document.getElementById(idCheck).checked) {
+            check = true;
+        } else {
+            check = false;
+        }
+        console.log(idCheck);
+        console.log(check);
+
+        $.ajax({
+            url: "/categoryAdmin/deleteFlag",
+            data: { id: idCheck, status: check },
+            type: "POST",
+            success: function (result) {
+                alert(result);
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+
+    }
+
+</script>

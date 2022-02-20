@@ -1,0 +1,32 @@
+﻿@model IEnumerable<TL.PCStore.Models.Category>
+<ul class="list-unstyled">
+    @foreach (var item in Model)
+    {
+
+    <li class="list-group-item list-group-item-action">
+        <a style = "font-size: 13px" 
+           href="@Url.Action("index", "products",new
+            {
+                page = Request.Params["page"],
+                sortOrder = Request.Params["sortOrder"],
+                search = Request.Params["search"],
+                category = item.Url,
+                brand = Request.Params["brand"]
+            })" 
+           class="link-dark"
+        >
+            <i class="fas fa-angle-double-right"></i>
+            @item.Name
+        </a>
+        @*@Html.ActionLink(item.Name, "index", "products", new
+        {
+                page = Request.Params["page"],
+                sortOrder = Request.Params["sortOrder"],
+                search = Request.Params["search"],
+                category = item.Url,
+                brand = Request.Params["brand"]
+            },
+            htmlAttributes: new { style = "font-size: 13px", @class = "link-dark" })*@
+    </li>       
+    }
+</ul>

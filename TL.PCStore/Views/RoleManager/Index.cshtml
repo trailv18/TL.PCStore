@@ -1,0 +1,73 @@
+﻿@model IEnumerable<TL.PCStore.Models.Role>
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container my-5">
+    <h2>Quyền</h2>
+
+    <div class="my-3">
+        @Html.ActionLink("Thêm mới", "Create", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })
+    </div>
+    <table class="table table-bordered">
+        <tr>
+            <th>Tên quyền</th>
+            <th>Xóa(ẩn)</th>
+            <th>Ngày tạo</th>
+            <th>Ngày sửa</th>
+            <th>Action</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DeleteFlag)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateDate)
+        </td>
+        <td>
+            <a href="@Url.Action("Edit", "Role", new { id = item.Id})" class="btn">
+                <i style="color:blue;" class="fas fa-edit"></i>
+            </a>
+
+            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+
+            <button class="btn mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal_@(item.Id)">
+                <i style="color:red;" class="fas fa-trash-alt"></i>
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal_@(item.Id)" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Xóa</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Bạn có muốn xóa không?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            @Html.ActionLink("Xóa", "DeleteRole", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+        }
+
+    </table>
+</div>
+@Html.Partial("_ShowSuccess")
+@Html.Partial("_ShowError")

@@ -1,0 +1,19 @@
+﻿@if (@TempData["message"] != null)
+{
+<div class="alert alert-success">
+    <div class="d-flex justify-content-center align-items-center">
+        <i style="width: 18px; height:18px; margin-right: 7px" class="fas fa-check-circle"></i>
+        @TempData["message"]
+    </div>
+        <img src="close.soon" style="display:none;" onerror="(function(e){ setTimeout(function(){ e.parentNode.parentNode.removeChild(e.parentNode); },5000 ); })(this);" />
+</div>
+}
+
+    <style>
+        .alert {
+            width: auto;
+            position: absolute;
+            top: 20px;
+            right: 7px;
+        }
+    </style>

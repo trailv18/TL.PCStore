@@ -1,0 +1,20 @@
+﻿<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark d-flex justify-content-between">
+    <div class="d-flex align-content-center">
+        <a style="width:0" class="navbar-brand" href="@Url.Action("index", "admin")">PC Store</a>
+    </div>
+
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item">
+            <a class="btn text-light" href="@Url.Action("index", "home")">Trang chủ</a>
+        </li>
+
+        <li class="nav-item mx-1">
+            @using (Html.BeginForm("logout", "account", FormMethod.Post, new { id = "logoutForm" }))
+            {
+                @Html.AntiForgeryToken()
+                <a class="btn text-light" href="javascript:document.getElementById('logoutForm').submit()">Đăng xuất</a>
+
+            }
+        </li>
+    </ul>
+</nav>

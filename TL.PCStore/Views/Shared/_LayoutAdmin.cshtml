@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PCStore-Admin</title>
+    <link rel="icon" type="image/x-icon" href="~/Images/logo.png" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+    <link href="~/Content/Admin/styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body class="sb-nav-fixed">
+    <div style="padding:0" class="container-fluid">
+        @Html.Partial("_HeaderAdmin")
+
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                @Html.Partial("_SideLeftNav")
+
+            </div>
+            <div id="layoutSidenav_content">
+                @RenderBody()
+
+                @Html.Partial("_FooterAdmin")
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="~/Scripts/Admin/scripts.js"></script>
+</body>
+</html>

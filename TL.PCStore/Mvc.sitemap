@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvcSiteMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0"
+            xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0 MvcSiteMapSchema.xsd">
+
+  <mvcSiteMapNode title="Trang chủ" controller="home" action="index">
+    <mvcSiteMapNode title="Sản phẩm" controller="products" action="index">
+      <mvcSiteMapNode title="Chi tiết sản phẩm" controller="products" action="getProductDetail"/>
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="Giỏ hàng" controller="order" action="cart"> </mvcSiteMapNode>
+  </mvcSiteMapNode>
+
+</mvcSiteMap>

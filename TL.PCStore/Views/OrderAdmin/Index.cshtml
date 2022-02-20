@@ -1,0 +1,293 @@
+﻿@model PagedList.IPagedList<TL.PCStore.Models.Order>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@{
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+
+<style>
+    .field-icon {
+        float: right;
+        margin-left: -25px;
+        position: relative;
+        background: none;
+        border: none;
+        z-index: 2;
+    }
+
+    .thead-color {
+        background-color: #243a76;
+        color: white;
+        border-color: #243a76;
+    }
+
+    .btn-cancel {
+        padding: 5px;
+        border: 1px solid #ff6a00;
+        background-color: #ff6a00;
+        color: white;
+    }
+
+    .btn-read {
+        border: 1px solid #f4f4f4;
+        border-radius: 2px;
+        padding: 7px 13px;
+        background-color: #243a76;
+        color: white;
+    }
+
+    .modal-content {
+        width: 700px !important;
+    }
+</style>
+
+<div class="container-fluid">
+    <h2 class="text-center my-4 text-uppercase">sản phẩm</h2>
+    <div class="row d-flex flex-row justify-content-between">
+        <div class="col-md-6">
+            @using (Html.BeginForm("index", "orderAdmin", FormMethod.Get, new { id = "formSortStatus" }))
+            {
+                <div style="width:300px" class="py-2 d-flex flex-row align-items-center">
+                    <label style="margin-right: 10px">Lọc: </label>
+                    @Html.DropDownList("status", null, htmlAttributes: new { @class = "form-select" })
+                </div>
+            }
+        </div>
+
+        <div class="col-md-4 ">
+            @using (Html.BeginForm("index", "orderAdmin", FormMethod.Get, new { id = "formSearch" }))
+            {
+                <div class="d-flex flex-row">
+                    @Html.TextBox("search", null, htmlAttributes: new { style = "width:300px", @class = "form-control", placeholder = "Nhập số điện thoại..." })
+                    <button class="field-icon" onclick="clearSearch()"><i class="fas fa-times"></i></button>
+                    <input style="margin-left: 10px;" class="btn btn-primary" type="submit" value="Tìm kiếm" />
+                </div>
+            }
+        </div>
+    </div>
+
+    <table width="100%" class="table-sm table-bordered" id="sort">
+        <thead class="thead-color">
+            <tr>
+                <th id="first" style="width:50px" class="text-center no-sort">STT</th>
+                <th style="width: 450px">Tên khách hàng</th>
+                <th style="width: 150px">Sđt</th>
+
+                <th style="width: 450px" class="no-sort">Trạng thái đặt hàng</th>
+                <th style="width: 250px" class="no-sort">Trạng thái thanh toán</th>
+                <th style="width:150px" class="no-sort">Thanh toán</th>
+                <th style="width:220px">Ngày đặt hàng</th>
+                <th style="width:100px" class="no-sort text-center">
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Select((x, i) => new { Data = x, Index = i }))
+
+            {
+                <tr>
+
+                    <td style="width:50px" class="text-center">
+                        @(item.Index + ((Model.PageNumber - 1) * Model.PageSize) + 1)
+                    </td>
+                    <td style="max-width: 450px">
+                        @Html.DisplayFor(modelItem => item.Data.User.FullName)
+                    </td>
+                    <td style="max-width: 150px">
+                        @Html.DisplayFor(modelItem => item.Data.User.Mobile)
+                    </td>
+                    <td style="max-width: 450px;">
+                        @if (item.Data.OrderStatus == "Đã giao")
+                        {
+                            <span class="badge badge-success">@Html.DisplayFor(modelItem => item.Data.OrderStatus)</span>
+                        }
+                        else if (item.Data.OrderStatus == "Đã hủy")
+                        {
+                            <span class="badge badge-danger">@Html.DisplayFor(modelItem => item.Data.OrderStatus)</span>
+                        }
+                        else if (item.Data.OrderStatus == "Đang giao")
+                        {
+                            <span class="badge badge-warning">@Html.DisplayFor(modelItem => item.Data.OrderStatus)</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-info">@Html.DisplayFor(modelItem => item.Data.OrderStatus)</span>
+                        }
+                    </td>
+
+                    <td style="width: 250px">
+                        @Html.DisplayFor(modelItem => item.Data.PaymentStatus)
+
+                    </td>
+
+                    <td style="width:150px">
+                        @Html.DisplayFor(modelItem => item.Data.Payment)
+                    </td>
+
+                    <td style="width:220px">
+                        @Html.DisplayFor(modelItem => item.Data.DateOrder)
+                    </td>
+
+                    <td style="width:100px" class="text-center">
+                        <button class="btn-read" data-bs-toggle="modal" data-bs-target="#exampleModal_@item.Data.Id">
+                            Chi tiết
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal_@item.Data.Id" tabindex="-1" aria-labelledby="exampleModalLabel_@item.Data.Id" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel_@item.Data.Id">Chi tiết đơn hàng</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        @foreach (var orderDetail in item.Data.OrderDetails)
+                                        {
+                                            <div class="row">
+                                                <div class="col-md-9 d-flex flex-row my-1">
+                                                    <img src="@Url.Content(orderDetail.Product.Picture)" width="100" height="100" />
+                                                    <p style="font-size:14px; padding-top: 10px">
+                                                        @Html.ActionLink(orderDetail.Product.Name, "getProductDetail", "products", new { url = orderDetail.Product.Url }, htmlAttributes: new { style = "font-size:14px;text-decoration: none; color: black;", @class = "link-product" })
+
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label style="padding-top: 10px">@orderDetail.Qty</label>
+                                                    x
+                                                    <label>@String.Format(format, "{0:c0}", orderDetail.Price)</label>
+                                                </div>
+
+                                            </div>
+                                        }
+                                        <hr />
+                                        <div class="text-start">
+                                            <p class="h6">Thông tin nhận hàng:</p>
+                                            <p style="margin:0">Người nhận: @item.Data.User.FullName</p>
+                                            <p style="margin: 0">Địa chỉ: @item.Data.User.Address</p>
+                                            <p style="margin: 0">Số điện thoại: @item.Data.User.Mobile</p>
+                                            <p style="margin: 0">Thanh toán: @item.Data.Payment</p>
+                                        </div>
+                                        <div class="d-flex flex-row justify-content-end align-items-center">
+                                            <h6 id="order_status@(item.Data.Id)" style="text-align:end">@item.Data.OrderStatus</h6>
+                                            <div id="update@(item.Data.Id)" hidden>
+                                                <select class="form-select" id="valueStatus@(item.Data.Id)" onchange="changeStatusOrder('@item.Data.Id')">
+                                                    <option value="Đang xử lý">Đang xử lý</option>
+                                                    <option value="Đang giao">Đang giao</option>
+                                                    <option value="Đã hủy">Hủy đơn hàng</option>
+                                                </select>
+                                            </div>
+                                            <button type="button" class="btn" id="btnShow@(item.Data.Id)" onclick="showUpdate('@item.Data.Id')">
+                                                <i style="color:blue;" class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                        <p style="color: #243a76; text-align:end" class="h6">Tổng tiền: @String.Format(format, "{0:c0}", item.Data.Total)</p>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary mx-2" data-bs-dismiss="modal">Đóng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <div class="row d-flex align-items-center border-top border-bottom">
+        <div class="col-md-4 d-flex flex-row align-items-center">
+            <label style="margin-right: 20px">Hiển thị </label>
+            @using (Html.BeginForm("index", "orderAdmin", FormMethod.Get, new { id = "form1" }))
+            {
+                <div style="width:70px" class="py-2">
+                    @Html.DropDownList("pageSize", null, htmlAttributes: new { @class = "form-select" })
+                </div>
+            }
+        </div>
+        <div class="col-md-4 text-end">
+            Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/@Model.PageCount
+            Hiển thị @ViewBag.itemPage tổng @ViewBag.total
+        </div>
+
+        <div class="col-md-4">
+            @Html.PagedListPager(Model, page => Url.Action("index",
+            new { page, search = Request.Params["search"], pageSize = Request.Params["pageSize"] }))
+        </div>
+    </div>
+
+</div>
+
+
+@Html.Partial("_ShowSuccess")
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        document.getElementById('first').classList.remove('sorting_asc');
+    });
+
+    $(function () {
+        $("#pageSize").change(function () {
+            $("#form1").submit();
+        });
+
+        $("#status").change(function () {
+            $("#formSortStatus").submit();
+        });
+    });
+
+    $('#sort').DataTable({
+        searching: false,
+        paging: false,
+        info: false,
+        columnDefs: [{
+            "targets": 'no-sort',
+            "orderable": false,
+        }]
+    });
+
+    function clearSearch() {
+        document.getElementById('search').value = '';
+        $("#formSearch").submit();
+    }
+
+    function showUpdate(id) {
+        document.getElementById(`order_status${id}`).hidden = true;
+        document.getElementById(`update${id}`).hidden = false;
+        document.getElementById(`btnShow${id}`).hidden = true;
+    }
+
+    function changeStatusOrder(id) {
+        console.log(id);
+        let idSelectStatus = `valueStatus${id}`;
+        let status = document.getElementById(idSelectStatus).value;
+
+        $.ajax({
+            url: "/orderAdmin/editStatus",
+            data: { id: id, status: status },
+            type: "POST",
+            success: function (result) {
+                alert(result);
+                window.location.replace("https://localhost:44388/orderAdmin");
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+
+    };
+</script>

@@ -1,0 +1,155 @@
+﻿
+        
+.top-bar {
+    background: #243a76;
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 10px 0;
+}
+
+    .top-bar .contact-info {
+        margin-right: 20px;
+    }
+
+    .top-bar ul {
+        margin-bottom: 0;
+    }
+
+    .top-bar .contact-info a {
+        font-size: 0.8rem;
+    }
+
+    .top-bar ul.social-custom {
+        margin-left: 20px;
+    }
+
+    .top-bar ul {
+        margin-bottom: 0;
+    }
+
+    .top-bar a.login-btn i, .top-bar a.signup-btn i {
+        margin-right: 10px;
+    }
+
+    .top-bar ul.social-custom a:hover {
+        background: #4fbfa8;
+        color: #fff;
+    }
+
+    .top-bar ul.social-custom a {
+        text-decoration: none !important;
+        font-size: 0.7rem;
+        width: 26px;
+        height: 26px;
+        line-height: 26px;
+        color: #999;
+        text-align: center;
+        border-radius: 50%;
+        margin: 0;
+    }
+
+    .top-bar a.login-btn, .top-bar a.signup-btn {
+        color: #eee;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        text-decoration: none !important;
+        font-weight: 700;
+        margin-right: 10px;
+    }
+
+.nav-link {
+    text-decoration: none !important;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-left: 20px;
+}
+
+.navbar-brand {
+    text-decoration: none !important;
+}
+
+.list-group-item {
+    border: none;
+}
+
+.category {
+    background: #243a76;
+    color: white;
+    text-decoration: none !important;
+    padding: 7px 5px 7px 0;
+}
+
+.link-dark {
+    text-decoration: none !important;
+}
+
+.category:hover {
+    color: white;
+}
+
+.wrapper-left {
+    border: 1px solid #f5f5f5;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.form-control {
+    width: 500px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+    .form-control:focus {
+        border: 1px solid #243a76;
+        box-shadow: none !important;
+    }
+
+.btn-search {
+    background-color: #243a76;
+    color: white;
+    border: 1px solid;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.blog .carousel-indicators {
+    left: 0;
+    top: auto;
+    bottom: -40px;
+}
+
+    /* The colour of the indicators */
+    .blog .carousel-indicators li {
+        background: #a3a3a3;
+        border-radius: 50%;
+        width: 8px;
+        height: 8px;
+    }
+
+    .blog .carousel-indicators .active {
+        background: #707070;
+    }
+
+.badge {
+    padding-left: 9px;
+    padding-right: 9px;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+}
+
+.label-warning[href],
+.badge-warning[href] {
+    background-color: #c67605;
+}
+
+#lblCartCount {
+    font-size: 12px;
+    background: #ff0000;
+    color: #fff;
+    padding: 0 5px;
+    vertical-align: top;
+    margin-left: -10px;
+}

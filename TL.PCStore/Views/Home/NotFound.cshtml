@@ -1,0 +1,63 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PCStore</title>
+    <link rel="icon" type="image/x-icon" href="~/Images/logo.png" />
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <style>
+        .error-template {
+            padding: 40px 15px;
+            text-align: center;
+        }
+
+        .error-actions {
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+            .error-actions .btn {
+                margin-right: 10px;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Oops!
+                    </h1>
+                    <h2 class="text-danger">
+                        Không tìm thấy nội dung
+                    </h2>
+                    <div class="error-details">
+                        Xin lỗi, nội dung không tồn tại!
+                    </div>
+                    <div class="error-actions">
+                        <a href="@Url.Action("index", "home")" class="btn btn-primary btn-lg">
+                            <span class="glyphicon glyphicon-home"></span>
+                            Quay lại trang chủ
+                        </a>
+                        <a href="#" class="btn btn-default btn-lg">
+                            <span class="glyphicon glyphicon-envelope"></span>
+                            Liên hệ hỗ trợ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

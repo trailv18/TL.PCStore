@@ -1,0 +1,31 @@
+﻿@model IEnumerable<TL.PCStore.Models.ProductBestSaleViewModel>
+
+@{
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+
+<div class="py-3">
+    <h6 >@ViewBag.Title</h6>
+</div>
+<ul class="list-group">
+    @foreach (var item in Model)
+    {
+        <li class="list-group-item">
+            <div class="media align-items-lg-center flex-column flex-lg-row row">
+                <div class="col-md-3">
+                    <a href="@Url.Action("getProductDetail", "products",new { url = item.Url})">
+
+                        <img class="card-img-top" src="@Url.Content(item.Picture)" alt="Hình ảnh" width="50" height="70" />
+                    </a>
+                </div>
+                <div class="col-md-9 media-body order-2 order-lg-1">
+                    <p class="mt-0 mb-2 ">
+                        @Html.ActionLink(item.Name, "getProductDetail", "products", new { url = item.Url }, htmlAttributes: new { style = "font-size: 12px", @class = "text-decoration-none text-dark " })
+                    </p>
+                    <span style="font-size: 10px">@String.Format(format, "{0:c0}", item.Price)</span>
+                </div>
+            </div>
+        </li>
+        <hr />
+    }
+</ul>

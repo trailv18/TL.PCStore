@@ -1,0 +1,152 @@
+﻿@model TL.PCStore.Models.Product
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@{
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+
+<style>
+    .wrapper-product {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        border: 1px solid #f4f4f4;
+        border-radius: 5px;
+        background-color: #f4f4f4;
+    }
+
+    .wrapper-price {
+        margin: 30px 0 30px 0;
+        padding: 15px 0 15px 20px;
+        border: 1px solid #f4f4f4;
+        border-radius: 5px;
+        background-color: white;
+    }
+
+    .wrapper-btn-buy {
+        margin: 15px 0 1px 0;
+        border: 1px solid #cc392a;
+        border-radius: 5px;
+        background-color: #cc392a;
+        width: 100%;
+    }
+
+    .wrapper-btn-tragop-the {
+        margin: 15px 5px 1px 0;
+        border: 1px solid #2b4ea7;
+        border-radius: 5px;
+        background-color: #2b4ea7;
+        width: 100%;
+    }
+
+    .wrapper-btn-tragop-hs {
+        margin: 15px 0 1px 5px;
+        border: 1px solid #c95311;
+        border-radius: 5px;
+        background-color: #c95311;
+        width: 100%;
+    }
+
+    .form-control {
+        width: 70px;
+        height: 30px;
+    }
+
+    .btn-qty {
+        border: 1px solid #f4f4f4;
+        border-radius: 3px;
+    }
+
+    .btn-read {
+        border: 1px solid #f4f4f4;
+        border-radius: 2px;
+        padding: 7px 13px;
+        background-color: #243a76;
+        color: white;
+    }
+</style>
+
+<section class="">
+
+    <div class="container px-4 px-lg-5 my-1 wrapper-product">
+
+        <div class="alert alert-success" id="alert" hidden role="alert">
+            Thêm vào giỏ hàng thành công!
+        </div>
+
+
+        <div class="row gx-4 gx-lg-5">
+            <div class="col-md-5">
+                <img class="card-img-top mb-5 mb-md-0" src="@Url.Content(Model.Picture)" alt="Hình ảnh" />
+            </div>
+            <div class="col-md-4">
+                <h4 class="">@Model.Name</h4>
+
+                <h6>Thông số sản phẩm</h6>
+                <span>
+                    @Html.Raw(Model.Description)
+                </span>
+                <h6>Loại sản phẩm: @Model.Category.Name</h6>
+                <h6>Thương hiệu: @Model.Brand.Name</h6>
+                <h6>Số lượng: @Model.Stock</h6>
+                <h6>Giá: @String.Format(format, "{0:c0}", Model.Price)</h6>
+                @if (Model.Discount == 0 || Model.Discount == null)
+                {
+                    <h6>Giảm giá: 0</h6>
+                }
+                else
+                {
+                    <h6>Giảm giá: @String.Format(format, "{0:c0}", Model.Discount)</h6>
+                }
+                <h6>Ngày tạo: @Model.CreateDate</h6>
+                <h6>Ngày chỉnh sửa: @Model.UpdateDate</h6>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="my-5">
+    <div class="container">
+        <p></p><figure class="highlight" style="box-sizing: border-box; display: block; margin: 0px; color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"></figure><p></p><p style="box-sizing: border-box; margin: 0px 0px 10px; font-size: 14px; color: rgb(104, 116, 127); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"></p><figure class="highlight" style="box-sizing: border-box; display: block; margin: 0px; color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"></figure><p></p><h2 class="ddnb-title spct-title" style="font-weight: 600; margin-top: 0px; font-size: 22px; padding-bottom: 10px; border-bottom: 1px solid rgb(234, 237, 241); color: rgb(34, 34, 34); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot">Đánh giá @Model.Name</h2>
+
+        <div id="content" hidden>
+            @Html.Raw(Model.Review)
+        </div>
+        <div class="text-center">
+            <button type="button" class="btn-read" id="readMore" onclick="readMore()">Xem thêm</button>
+        </div>
+
+        <div class="text-center">
+            <button type="button" class="btn-read" id="readLess" onclick="readLess()" hidden>Thu gọn</button>
+        </div>
+
+        <div class="py-5">
+            @*comment*@
+        </div>
+    </div>
+</section>
+
+<div class="form-group d-flex align-content-center justify-content-center py-5">
+    @Html.ActionLink("Chỉnh sửa", "edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" })
+    @Html.ActionLink("Quay lại", "index", "productAdmin", null, htmlAttributes: new { @class = "btn btn-warning ml-3" })
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+
+<script>
+    function readMore() {
+        document.getElementById('content').hidden = false;
+        document.getElementById('readMore').hidden = true;
+        document.getElementById('readLess').hidden = false;
+
+    }
+    function readLess() {
+        document.getElementById('content').hidden = true;
+        document.getElementById('readMore').hidden = false;
+        document.getElementById('readLess').hidden = true;
+    }
+</script>

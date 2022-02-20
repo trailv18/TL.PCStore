@@ -1,0 +1,155 @@
+﻿<style>
+    .btn-cart{
+        border: none;
+        background:none;
+    }
+
+    .main-section {
+        background-color: #F8F8F8;
+        margin-top: 50px;
+    }
+
+    .dropdown {
+        float: right;
+        padding-right: 30px;
+    }
+
+    .btn {
+        border: 0px;
+        margin: 10px 0px;
+        box-shadow: none !important;
+    }
+
+    .dropdown .dropdown-menu {
+        padding: 20px;
+        top: 40px !important;
+        width: 400px !important;
+        left: -270px !important;
+        box-shadow: 0px 5px 30px black;
+    }
+
+    .total-header-section {
+        border-bottom: 1px solid #d2d2d2;
+    }
+
+    .total-section p {
+        margin-bottom: 20px;
+    }
+
+    .cart-detail {
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: 350px;
+    }
+
+    .cart-detail-img img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .cart-detail-product p {
+        margin: 0px;
+        color: #000;
+        font-weight: 500;
+    }
+
+    .cart-detail .price {
+        font-size: 12px;
+        margin-right: 10px;
+        font-weight: 500;
+        color: #243a76;
+    }
+
+
+
+    .btn-tt {
+        font-size: 15px;
+        color: white;
+        border: 1px solid #243a76;
+        border-radius: 3px;
+        width: 150px;
+        background-color: #243a76;
+    }
+
+    .btn-tt:hover{
+        color: white;
+    }
+    
+</style>
+<div class="top-bar">
+    <div class="container">
+        <div class="row d-flex align-items-center">
+            <div class="col-md-6 d-md-block d-none align-items-center">
+                <span>Liên hệ +91 7568 54 3012 hoặc pcstore@gmail.com.</span>
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex justify-content-md-end justify-content-between">
+                    <ul class="list-inline contact-info d-block d-md-none">
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-phone"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-envelope"></i></a></li>
+                    </ul>
+                    <div class="login">
+                        @Html.Partial("_LoginPartial")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <nav id="navbar_top" class="navbar navbar-expand-lg navbar-light bg-light text-dark">
+        <div class="container px-4 px-lg-5">
+
+            <a href="@Url.Action("index", "home")">
+                <img width="40" height="40" src="~/Images/logo.png" />
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul style="padding-left: 90px;" class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 ">
+                    <li class="nav-item mr-3">
+                        @Html.ActionLink("Trang chủ", "index", "home", null, htmlAttributes: new { @class = "nav-link" })
+                    </li>
+
+                    <li class="nav-item">
+                        @Html.ActionLink("Shop", "index", "products", null, htmlAttributes: new { @class = "nav-link" })
+                    </li>
+
+                    <li class="nav-item">
+                        @Html.ActionLink("Tin tức", "listNews", "news", null, htmlAttributes: new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#!">Giới thiệu</a></li>
+
+                </ul>
+                <div class="d-flex">
+                    <div class="dropdown">
+                        <button type="button" class="btn-cart" data-toggle="dropdown">
+                            <i style="font-size: 30px; color: #243a76; " class="fas fa-shopping-bag" aria-hidden="true"></i>
+                            <span class="badge ms-1 rounded-pill" id='lblCartCount'></span>
+
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="cart-detail">
+                                <p>Tổng: <span style="color: #243a76; font-weight:bold;" id="total"></span><hr /></p>
+                                <div class="" id="cartData">
+
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-md-12 text-center">
+                                    <a class="btn btn-tt" href="@Url.Action("cart","order")">Thanh toán</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+

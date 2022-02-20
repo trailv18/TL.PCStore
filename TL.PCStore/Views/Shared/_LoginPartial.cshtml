@@ -1,0 +1,26 @@
+﻿
+@if (Session["UserName"] as string != null)
+{
+    using (Html.BeginForm("logout", "account", FormMethod.Post, new { id = "logoutForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        if (Session["Role"] as string == "Admin")
+        {
+            @Html.ActionLink("Admin", "index", "admin", null, htmlAttributes: new { style = "font-size:10px", @class = "login-btn" })
+        }
+        else
+        {
+            @Html.ActionLink("Tài khoản", "getUserInformation", "user", null, htmlAttributes: new { style = "font-size:10px", @class = "login-btn" })
+        }
+        <a style="font-size:10px" class="signup-btn" href="javascript:document.getElementById('logoutForm').submit()">
+            Đăng xuất
+        </a>
+
+    }
+}
+else
+{
+    @Html.ActionLink("Đăng ký", "register", "account", routeValues: null, htmlAttributes: new { style = "font-size:10px", @class = "signup-btn" })
+    @Html.ActionLink("Đăng nhập", "login", "account", routeValues: null, htmlAttributes: new { style = "font-size:10px", @class = "login-btn" })
+}

@@ -1,0 +1,27 @@
+﻿<link href="~/Content/custom-header.css" rel="stylesheet" />
+
+<div class="container">
+    <div class="row my-2">
+        <div class="col-md-3">
+            <a class="category w-100 d-flex align-items-center justify-content-between"
+               data-bs-toggle="collapse" href="#collapseExample" aria-expanded="true"
+               aria-controls="collapseExample">
+                <span class="ps-3">LOẠI SẢN PHẨM</span>
+                <i style="padding-right:5px" class="fas fa-chevron-down"></i>
+            </a>
+
+            <div class="collapse show border" id="collapseExample">        
+                    @Html.Action("GetNameCategory", "Categories")
+            </div>
+        </div>
+        <div class="col-md-9 col-sm-12">
+            <div class="d-flex justify-content-center">
+                @Html.Partial("_Search")
+            </div>
+
+            <div class="my-3">
+                @Html.Partial("_Slide")
+            </div>
+        </div>
+    </div>
+</div>

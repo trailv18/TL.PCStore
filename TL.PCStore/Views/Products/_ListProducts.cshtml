@@ -1,0 +1,173 @@
+﻿@model PagedList.IPagedList<TL.PCStore.Models.Product>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+<style>
+    .title-h {
+        color: #333;
+        line-height: 40px;
+        font-size: 28px;
+        font-weight: 400;
+        text-transform: uppercase;
+        margin: 0 20px 0 0;
+    }
+
+    .link-product {
+        color: black;
+        padding: 0;
+        margin: 0;
+        text-decoration: none;
+    }
+
+    .row > * {
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+    }
+
+    .sort {
+        margin-left: 20px;
+        margin-top: 30px;
+        font-size: 13px
+    }
+
+    .f-select {
+        margin-left: 5px;
+        height: 25px;
+        width: 100px;
+        border: 1px solid
+    }
+
+    .title-sort {
+        border: 1px solid #d9d9d9;
+        line-height: 30px;
+        display: block;
+        text-align: center;
+        margin: 0 10px 10px 10px;
+        border-radius: 3px;
+        text-transform: uppercase;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .wrapper-sort {
+        margin: 30px 10px 0 10px;
+        border: 1px solid #d9d9d9;
+        padding-top: 20px;
+    }
+
+    .title-dk {
+        margin-left: 10px;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+</style>
+
+<div class="d-flex justify-content-center my-4">
+    @Html.Partial("_Search")
+</div>
+
+<div class="my-4 mx-3">
+    @Html.MvcSiteMap().SiteMapPath()
+</div>
+
+<div  class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-3 bg-white">
+            <span class="title-sort">Lọc sản phẩm</span>
+            <div class="wrapper-sort">
+                <span class="title-dk">Danh mục sản phẩm</span>
+                @Html.Action("getNameCategory", "categories")
+            </div>
+            <div class="wrapper-sort">
+                <span class="title-dk">Thương hiệu</span>
+                @Html.Action("getNameBrand", "brands")
+            </div>
+        </div>
+
+        <div style="background-color: #f4f4f4" class="col-md-9">
+            <div class="d-flex flex-row sort">
+                <span>Sắp xếp theo:</span>
+                @using (Html.BeginForm("index", "products", FormMethod.Get, new { id = "form1" }))
+                {
+                    @Html.DropDownList("sortOrder", null, "-- Sắp xếp --", htmlAttributes: new { @class = "f-select" })
+                }
+            </div>
+            <section>
+                <div class="px-lg-5">
+                    <div class="d-flex flex-row py-3">
+                        <h2 class="title-h ">@ViewBag.Title</h2>
+                    </div>
+
+                    <div style="" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4">
+                        @foreach (var item in Model)
+                        {
+                            <div class="col-md-3 mb-5">
+                                <div class="card h-100">
+                                    <a href="@Url.Action("getProductDetail", "products",new { url = item.Url})">
+                                        <img class="card-img-top" src="@Url.Content(item.Picture)" alt="Hình ảnh" width="90" height="220" />
+                                    </a>
+                                    <div style="padding-top:0; padding-bottom:0" class="card-body">
+                                        <div class="text-center">
+                                            <!-- Product name-->
+                                            <p style="font-size:11px; margin:0" class="fw-bolder">
+                                                @Html.ActionLink(item.Name, "getProductDetail", "products", new { url = item.Url }, htmlAttributes: new { @class = "link-product" })
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <!-- Product actions-->
+                                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                        @if (item.Discount == 0 || item.Discount == null)
+                                        {
+                                            <span style="font-size:15px;">@String.Format(format, "{0:c0}", item.Price)</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="font-size:15px; text-decoration:line-through">@String.Format(format, "{0:c0}", item.Price)</span>
+                                            <span style="font-size:15px;">@String.Format(format, "{0:c0}", item.Discount)</span>
+
+                                        }
+
+                                        <div class="d-flex flex-row justify-content-between">
+                                            @if (item.Stock > 1)
+                                            {
+                                                <span style="font-size:13px; color: forestgreen"><i class="fas fa-check"></i> Còn hàng</span>
+
+                                            }
+                                            else
+                                            {
+                                                <span style="font-size: 13px; color: blue"><i class="fas fa-phone"></i> Liên hệ</span>
+
+                                            }
+                                            
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="d-flex justify-content-center">
+            @Html.PagedListPager(Model, page => Url.Action("index",
+                new { page, sortOrder = Request.Params["sortOrder"], search = Request.Params["search"], category = Request.Params["category"], brand = Request.Params["brand"] }))
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $("#sortOrder").change(function () {
+            $("#form1").submit();
+        });
+    });
+</script> 

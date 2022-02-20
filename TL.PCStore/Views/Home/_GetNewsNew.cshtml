@@ -1,0 +1,51 @@
+﻿@model IEnumerable<TL.PCStore.Models.News>
+<style>
+    .wrapper-news {
+        height: 250px;
+        width: 550px;
+        border: 1px solid #f4f4f4;
+        border-radius: 5px;
+        margin: 30px;
+    }
+
+    .media-body {
+        padding-top: 70px;
+        padding-left: 40px;
+        padding-right: 40px;
+        align-content: center;
+    }
+</style>
+<div style="background-color: #f4f4f4" class="container px-lg-5 mt-5">
+    <div class="d-flex flex-row py-3">
+        <h2 class="title-h ">@ViewBag.Title</h2>
+    </div>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="wrapper-news shadow">
+                <div class="media-body order-2 order-lg-1">
+                    <h4 class="mt-0 mb-2 ">
+                        @Html.ActionLink(item.Title, "getNews", "news", new { url = item.Url }, htmlAttributes: new { @class = "text-decoration-none text-dark " })
+                    </h4>
+                    <p class="font-italic text-muted mb-0 small">
+                        Đăng bởi @item.User.FullName |
+
+                        Đăng ngày @item.PostedOn |
+
+                        @if (item.ViewCount == 0 || item.ViewCount == null)
+                        {
+                            <label>(chưa có lượt xem)</label>
+                        }
+                        else
+                        {
+                            <label>@item.ViewCount (lượt xem)</label>
+
+                        }
+
+                    </p>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>

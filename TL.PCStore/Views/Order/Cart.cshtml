@@ -1,0 +1,218 @@
+﻿
+@{
+    ViewBag.Title = "Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .ui-w-40 {
+        width: 40px !important;
+        height: auto;
+    }
+
+    .card {
+        box-shadow: 0 1px 15px 1px rgba(52,40,104,.08);
+    }
+
+    .ui-product-color {
+        display: inline-block;
+        overflow: hidden;
+        margin: .144em;
+        width: .875rem;
+        height: .875rem;
+        border-radius: 10rem;
+        -webkit-box-shadow: 0 0 0 1px rgba(0,0,0,0.15) inset;
+        box-shadow: 0 0 0 1px rgba(0,0,0,0.15) inset;
+        vertical-align: middle;
+    }
+
+    .form-control {
+        width: 70px;
+    }
+
+    .btn-qty {
+        border: 1px solid #f4f4f4;
+        border-radius: 3px;
+    }
+
+    .btn-ud {
+        border: none;
+        background: none;
+    }
+
+    .disabled-link {
+        pointer-events: none;
+    }
+
+    .title-tit {
+        text-transform: uppercase;
+        font-size: 16px;
+        font-weight: bold;
+        background: #eee;
+        padding: 11px 10px;
+    }
+
+    .btn-tta {
+        margin: 5px 0;
+    }
+</style>
+
+<div class="container px-3 my-5 clearfix">
+    <div class="my-4 mx-3">
+        @Html.MvcSiteMap().SiteMapPath()
+    </div>
+    <div class="py-2">
+        <h2>Giỏ hàng</h2>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table m-0">
+                <thead>
+                    <tr>
+                        <th class="py-3 px-4" style="min-width: 400px;">Tên sản phẩm</th>
+                        <th class="text-right py-3 px-4" style="width: 200px;">Giá</th>
+                        <th class="text-center py-3 px-4" style="width: 200px;">Số lượng</th>
+                        <th class="text-right py-3 px-4" style="width: 200px;">Thành tiền</th>
+                        <th class="text-center align-middle py-3 px-0" style="width: 100px;">Xóa</th>
+                    </tr>
+                </thead>
+                <tbody id="cartDataAll">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <div class="col-md-5">
+                <h4 class="title-tit">Thông tin người mua</h4>
+                <p style="font-size:12px;">Để tiếp tục đặt hàng, quý khách xin vui lòng nhập thông tin bên dưới</p>
+                <div class="form-group">
+                    <label for="name">Tên:</label>
+                    <input style="width: 100%" type="text" value="@ViewBag.Name" id="name" class="form-control" oninput="validateName()" required />
+                    <span style="font-size:12px" class="text-danger" id="error-name"></span>
+                </div>
+                <div class="form-group">
+                    <label for="mobile">Số điện thoại:</label>
+                    <input style="width: 100%" type="text" value="@ViewBag.Mobile" id="mobile" class="form-control" oninput="validateMobile()" required />
+                    <span style="font-size:12px" class="text-danger" id="error-mobile"></span>
+                </div>
+                <div class="form-group">
+                    <label for="address">Địa chỉ:</label>
+                    <input style="width: 100%" type="text" value="@ViewBag.UserAddress" id="address" oninput="validateAddress()" class="form-control" required />
+                    <span style="font-size:12px" class="text-danger" id="error-address"></span>
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h4 class="title-tit">Thông tin Thanh toán</h4>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" value="shipcode" name="payment" id="shipcode" />
+                    <label class="form-check-label" for="shipcode">Thanh toán tiền mặt khi nhận hàng.</label>
+
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" value="online" name="payment" id="online">
+                    <label class="form-check-label" for="online">Thanh toán online.</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <h4 class="title-tit">Tổng tiền</h4>
+                <table width="100%" cellpadding="5">
+                    <tbody>
+                        <tr>
+                            <td>Khuyến mãi: </td>
+                            <td align="right"><strong id="discount">0</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Thành tiền: </td>
+                            <td align="right"><strong id="allTotal"></strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                @if (Session["UserName"] as string != null)
+                {
+                    <input id="btnCheckOut" type="button" class="btn btn-success w-100 btn-tta" disabled value="Thanh toán" onclick="checkOut()" />
+                }
+                else
+                {
+                    <input id="btnCheckOut" type="button" class="btn btn-danger w-100 btn-tta" value="Đăng nhập để thanh toán" onclick="location.href='@Url.Action("LoginOrder", "Order")'" />
+
+                }
+
+                <a href="@Url.Action("index", "products")" class="btn btn-primary w-100 btn-tta">Tiếp tục mua</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+        loadDataToTable();
+    });
+
+    function validateName() {
+        let name = document.getElementById("name").value;
+        if (!name) {
+            document.getElementById("error-name").innerHTML = "Nhập tên người nhận!";
+        } else {
+            document.getElementById("error-name").innerHTML = "";
+        }
+    }
+
+    function validateAddress() {
+        let address = document.getElementById("address").value;
+        if (!address) {
+            document.getElementById("error-address").innerHTML = "Nhập địa chỉ nhận hàng!";
+        } else {
+            document.getElementById("error-address").innerHTML = "";
+        }
+    }
+
+    function validateMobile() {
+        let mobile = document.getElementById("mobile").value;
+        if (!mobile) {
+            document.getElementById("error-mobile").innerHTML = "Nhập số điện thoại!";
+        } else {
+            document.getElementById("error-mobile").innerHTML = "";
+        }
+    }
+
+    function checkOut() {
+        let name = document.getElementById("name").value;
+        let mobile = document.getElementById("mobile").value;
+        let address = document.getElementById("address").value;
+        let payment = document.getElementsByName("payment")[0].value
+
+        let productLocal = [];
+        productLocal = JSON.parse(localStorage.getItem('products'));
+
+        var arrProduct = new Array();
+        var counter = 0;
+
+        for (var i = 0; i < productLocal.length; i++) {
+            arrProduct[counter] = { ProductId: productLocal[i].id, Qty: productLocal[i].qty, Price: productLocal[i].price };
+            counter++;
+        }
+
+        $.ajax({
+            url: "/order/checkOut",
+            data: { products: arrProduct, name: name, mobile: mobile, address: address, payment: payment },
+            type: "POST",
+            success: function (result) {
+                alert("Đặt hàng thành công!");
+                localStorage.clear();
+                window.location.replace("https://localhost:44388/user/getOrder");
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+</script>
+

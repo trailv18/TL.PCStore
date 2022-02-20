@@ -1,0 +1,53 @@
+﻿@model PagedList.IPagedList<TL.PCStore.Models.News>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("_Banner")
+
+
+<div class="row py-5">
+    <div class="col-md-8 mx-auto">
+        <ul class="list-group shadow">
+            @foreach (var item in Model)
+            {
+                <li class="list-group-item">
+                    <div class="media align-items-lg-center flex-column flex-lg-row p-3">
+                        <div class="media-body order-2 order-lg-1">
+                            <h5 class="mt-0 font-weight-bold mb-2"><a class="text-decoration-none text-dark" href="@Url.Action("getNews", "news", new { url = item.Url})">@item.Title</a></h5>
+                            <p>@item.ShortDescription</p>
+                            <p class="font-italic text-muted mb-0 small">
+                                Đăng bởi @item.User.FullName |
+
+                                Đăng ngày @item.PostedOn |
+
+                                @if (item.ViewCount == 0 || item.ViewCount == null)
+                                {
+                                    <label>(chưa có lượt xem)</label>
+                                }
+                                else
+                                {
+                                    <label>@item.ViewCount (lượt xem)</label>
+
+                                }
+
+                            </p>
+                        </div>
+                    </div>
+                </li>
+                <hr />
+            }
+        </ul>
+        <div class="d-flex justify-content-center">
+            @Html.PagedListPager(Model, page => Url.Action("listNews",
+                new { page}))
+        </div>
+    </div>
+    <div class="col-md-4 mx-auto shadow">
+
+        @Html.Action("GetProductBestSale")
+    </div>
+</div>

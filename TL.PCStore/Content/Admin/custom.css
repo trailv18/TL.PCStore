@@ -1,0 +1,27 @@
+﻿.invalid {
+    border-color: red;
+}
+
+.valid {
+    border-color: green;
+}
+
+.invalid:focus {
+    border: 1px solid red;
+    box-shadow: none !important;
+}
+
+.valid:focus {
+    border: 1px solid green;
+    box-shadow: none !important;
+}
+
+
+input:focus {
+    border: 1px solid #ced4da;
+    box-shadow: none !important;
+}
+
+.wrapper-form {
+    width: 500px;
+}

@@ -1,0 +1,263 @@
+﻿@model TL.PCStore.Models.Product
+
+@{
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+
+<style>
+    .wrapper-product {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        border: 1px solid #f4f4f4;
+        border-radius: 5px;
+        background-color: #f4f4f4;
+    }
+
+    .wrapper-price {
+        margin: 30px 0 30px 0;
+        padding: 15px 0 15px 20px;
+        border: 1px solid #f4f4f4;
+        border-radius: 5px;
+        background-color: white;
+    }
+
+    .wrapper-btn-buy {
+        margin: 15px 0 1px 0;
+        border: 1px solid #cc392a;
+        border-radius: 5px;
+        background-color: #cc392a;
+        width: 100%;
+    }
+
+    .wrapper-btn-tragop-the {
+        margin: 15px 5px 1px 0;
+        border: 1px solid #2b4ea7;
+        border-radius: 5px;
+        background-color: #2b4ea7;
+        width: 100%;
+    }
+
+    .wrapper-btn-tragop-hs {
+        margin: 15px 0 1px 5px;
+        border: 1px solid #c95311;
+        border-radius: 5px;
+        background-color: #c95311;
+        width: 100%;
+    }
+
+    .form-control {
+        width: 70px;
+        height: 30px;
+    }
+
+    .btn-qty {
+        border: 1px solid #f4f4f4;
+        border-radius: 3px;
+    }
+
+    .btn-read {
+        border: 1px solid #f4f4f4;
+        border-radius: 2px;
+        padding: 7px 13px;
+        background-color: #243a76;
+        color: white;
+    }
+</style>
+
+<section class="">
+
+    @Html.MvcSiteMap().SiteMapPath()
+
+    <div class="container px-4 px-lg-5 my-1 wrapper-product">
+
+        <div class="alert alert-success" id="alert" hidden role="alert">
+            Thêm vào giỏ hàng thành công!
+        </div>
+
+        <h4 class="">@Model.Name</h4>
+        <hr />
+
+        <div class="row gx-4 gx-lg-5">
+            <div class="col-md-5">
+                <img class="card-img-top mb-5 mb-md-0" src="@Url.Content(Model.Picture)" alt="Hình ảnh" />
+            </div>
+            <div class="col-md-4">
+                <h6>Thông số sản phẩm</h6>
+                <span>
+                    @Html.Raw(Model.Description)
+                </span>
+                <div class="wrapper-price">
+                    @if (Model.Discount == 0 || Model.Discount == null)
+                    {
+                        <span style="font-size: 25px; color: #cc392a; font-weight:bold">@String.Format(format, "{0:c0}", Model.Price)</span>
+                    }
+                    else
+                    {
+                        <span style="font-size: 25px; color: black; font-weight: bold; text-decoration: line-through">@String.Format(format, "{0:c0}", Model.Price)</span>
+                        <span style="font-size: 25px; color: #cc392a; font-weight:bold">@String.Format(format, "{0:c0}", Model.Discount)</span>
+
+                    }
+                </div>
+
+                <div>
+                    @if (Model.Stock > 1)
+                    {
+                        <div class="d-flex flex-row align-items-center">
+                            <label style="margin-right: 10px;">Số lượng: </label>
+                            <button class="btn-qty" onclick="minus('qty')" data-field="qty"><i class="fas fa-minus"></i></button>
+                            <input type="number" value="1" id="qty" class="form-control" />
+                            <button class="btn-qty" onclick="plus('qty')" data-field="qty"><i class="fas fa-plus"></i></button>
+                        </div>
+
+                        <button class="wrapper-btn-buy text-center" onclick="addToCart()">
+                            <span style=" color: white; text-transform: uppercase;">Đặt mua ngay</span>
+                            <br />
+                            <span style=" color: white; font-size: 12px;">Giao hàng nhanh chóng</span>
+                        </button>
+                    }
+                    else
+                    {
+                        <div class="wrapper-btn-buy text-center">
+                            <a class="text-decoration-none" href="#">
+                                <span style=" color: white; text-transform: uppercase;">Liên Hệ</span>
+                                <br />
+                                <span style=" color: white; font-size: 12px;">Giao hàng nhanh chóng</span>
+                            </a>
+                        </div>
+                    }
+                </div>
+
+
+
+                <div class="d-flex flex-row">
+                    <button class="wrapper-btn-tragop-the">
+                        <span style="color: white; text-transform: uppercase;">Trả góp qua thẻ</span>
+                        <br />
+                        <span style=" color: white; font-size: 12px;">6 tháng, 9 tháng 12 tháng</span>
+                    </button>
+                    <button class="wrapper-btn-tragop-hs">
+                        <span style=" color: white; text-transform: uppercase;">Trả góp hồ sơ</span>
+                        <br />
+                        <span style=" color: white; font-size: 12px;">6 tháng, 9 tháng 12 tháng</span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-3 d-flex flex-column">
+                <div class="card">
+                    <div class="card-header">
+                        YÊN TÂM MUA HÀNG
+                    </div>
+                    <ul style="font-size: 12px;" class="list-group list-group-flush">
+                        <li class="list-group-item">Sản phẩm chính hãng 100%.</li>
+                        <li class="list-group-item">Đổi trả hàng miễn phí trong 10 ngày.</li>
+                        <li class="list-group-item">Trả góp lãi suất 0% toàn bộ giỏ hàng.</li>
+                        <li class="list-group-item">Ưu đãi riêng cho học sinh sinh viên.</li>
+                        <li class="list-group-item">Vệ sinh miễn phí trọn đời PC, Laptop.</li>
+                    </ul>
+                </div>
+                <div class="card" style="margin-top: 20px">
+                    <div class="card-header">
+                        MIỄN PHÍ GIAO HÀNG
+                    </div>
+                    <ul style="font-size: 12px;" class="list-group list-group-flush">
+                        <li class="list-group-item">Giao hàng siêu tốc.</li>
+                        <li class="list-group-item">Giao hàng miễn phí toàn quốc.</li>
+                        <li class="list-group-item">Nhận hàng và thanh toán ngay tại nhà.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="my-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <p></p><figure class="highlight" style="box-sizing: border-box; display: block; margin: 0px; color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"></figure><p></p><p style="box-sizing: border-box; margin: 0px 0px 10px; font-size: 14px; color: rgb(104, 116, 127); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"></p><figure class="highlight" style="box-sizing: border-box; display: block; margin: 0px; color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"></figure><p></p><h2 class="ddnb-title spct-title" style="font-weight: 600; margin-top: 0px; font-size: 22px; padding-bottom: 10px; border-bottom: 1px solid rgb(234, 237, 241); color: rgb(34, 34, 34); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot">Đánh giá @Model.Name</h2>
+                <div id="content" hidden>
+                    @Html.Raw(Model.Review)
+                </div>
+                <div class="text-center">
+                    <button type="button" class="btn-read" id="readMore" onclick="readMore()">Xem thêm</button>
+                </div>
+
+                <div class="text-center">
+                    <button type="button" class="btn-read" id="readLess" onclick="readLess()" hidden>Thu gọn</button>
+                </div>
+                <hr />
+                <div class="py-5">
+                    @*comment*@
+                </div>
+            </div>
+            <div class="col-md-4 shadow">
+                @Html.Action("GetNews")
+                @Html.Action("GetNewsViewCount")
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+<script>
+    function readMore() {
+        document.getElementById('content').hidden = false;
+        document.getElementById('readMore').hidden = true;
+        document.getElementById('readLess').hidden = false;
+
+    }
+    function readLess() {
+        document.getElementById('content').hidden = true;
+        document.getElementById('readMore').hidden = false;
+        document.getElementById('readLess').hidden = true;
+    }
+
+
+    function addToCart() {
+        let qt = document.getElementById("qty").value;
+        let id = '@Html.Raw(Model.Id)';
+        let name = '@Html.Raw(Model.Name)';
+        let image = '@Html.Raw(Model.Picture)';
+        let url = '@Html.Raw(Model.Url)';
+
+        let price;
+        let p1 = '@Html.Raw(Model.Price)';
+        let p2 = '@Html.Raw(Model.Discount)';
+        console.log(p2);
+        if (p2) {
+            price = p2;
+        } else {
+            price = p1;
+        }
+
+        let qty = parseInt(qt);
+
+        let products = [];
+
+        if (JSON.parse(localStorage.getItem('products'))) {
+            products = JSON.parse(localStorage.getItem('products'))
+            let existItemIndex = products.findIndex((item) => item.id === id)
+            if (existItemIndex >= 0) {
+                products[existItemIndex].qty += qty
+            }
+            else {
+                products.push({ 'id': id, 'name': name, 'image': image, 'price': price, 'url': url, 'qty': qty });
+            }
+        }
+        else {
+            products.push({ 'id': id, 'name': name, 'image': image, 'price': price, 'url': url, 'qty': qty });
+        }
+        localStorage.setItem("products", JSON.stringify(products));
+
+        document.getElementById('alert').hidden = false;
+
+        setInterval(function () {
+            document.getElementById('alert').hidden = true;
+        }, 10000);
+
+        viewCartHeader();
+    }
+</script>

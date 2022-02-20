@@ -1,0 +1,44 @@
+﻿@model TL.PCStore.Models.User
+
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4 col-lg-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <img src="~/Images/user.png" width="100" height="100" alt="User" class="rounded-circle mb-3">
+                    <h5 class="bold mb-0">@Model.FullName</h5>
+                    
+                </div>
+                <div class="list-group list-group-flush">
+                    <a class="list-group-item list-group-item-action active" ref="@Url.Action("getUserInformation","user")"><i data-feather="user" class="mr-3"></i>Tài khoản</a>
+                    <a class="list-group-item list-group-item-action" href="@Url.Action("getOrder","user")"><i data-feather="shopping-bag" class="mr-3"></i> Đơn hàng</a>
+                    <a class="list-group-item list-group-item-action text-danger"><i data-feather="log-out" class="mr-3"></i> Đăng xuất</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col mt-3 mt-md-0">
+            @*<div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Tài khoản đã được cập nhật!</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Mật khẩu sai</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>*@
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-center">TÀI KHOẢN</h5><hr>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

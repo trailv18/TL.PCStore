@@ -1,0 +1,171 @@
+﻿@model TL.PCStore.Models.Product
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<link href="~/Content/Admin/custom.css" rel="stylesheet" />
+<script src="~/Scripts/Admin/validate-product.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
+<style>
+    #file {
+        opacity: 0;
+    }
+
+    #upload-label {
+        position: absolute;
+        top: 50%;
+        left: 1rem;
+        transform: translateY(-50%);
+    }
+
+    .img-fluid {
+        width: 430px;
+        height: 470px;
+    }
+</style>
+
+<div style="margin-top:50px; margin-bottom: 50px;" class="container">
+
+    @using (Html.BeginForm("edit", "productAdmin", FormMethod.Post, new
+    { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h2 class="text-center text-uppercase">Sửa thông tin sản phẩm</h2>
+            <hr />
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.CreateDate)
+            @Html.HiddenFor(model => model.Picture)
+
+            <div class="row">
+                <div style="padding-right:30px" class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label class="control-label">Tên sản phẩm <strong class="text-danger">*</strong></label>
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", oninput = "validateName()", required = "required" } })
+                        <span style="font-size:12px" class="text-danger" id="error-name"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="control-label">Url sản phẩm <strong class="text-danger">*</strong></label>
+                        @Html.EditorFor(model => model.Url, new { htmlAttributes = new { @class = "form-control", oninput = "validateUrl()", required = "required" } })
+                        <span style="font-size:12px" class="text-danger" id="error-url"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Loại sản phẩm <strong class="text-danger">*</strong></label>
+                        @Html.DropDownListFor(model => model.CategoryId, null, "-- Chọn loại sản phẩm --", htmlAttributes: new { @class = "form-control", onchange = "validateCategory()", required = "required" })
+                        <span style="font-size:12px" class="text-danger" id="error-category"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="control-label">Thương hiệu <strong class="text-danger">*</strong></label>
+                        @Html.DropDownListFor(model => model.BrandId, null, "-- Chọn thương hiệu --", htmlAttributes: new { @class = "form-control", onchange = "validateBrand()", required = "required" })
+                        <span style="font-size:12px" class="text-danger" id="error-brand"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Số lượng <strong class="text-danger">*</strong></label>
+                        @Html.EditorFor(model => model.Stock, new { htmlAttributes = new { @class = "form-control", oninput = "validateStock()", required = "required" } })
+                        <span style="font-size:12px" class="text-danger" id="error-stock"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="control-label">Giá <strong class="text-danger">*</strong></label>
+                        @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", @type = "number", oninput = "validatePrice()", required = "required" } })
+                        <span style="font-size:12px" class="text-danger" id="error-price"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="control-label">Giảm giá</label>
+                        @Html.EditorFor(model => model.Discount, new { htmlAttributes = new { @class = "form-control", @type = "number", oninput = "validatePrice()" } })
+                        <span style="font-size:12px" class="text-danger" id="error-price"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label>Ngày tạo (mm/dd/yyyy) <strong class="text-danger">*</strong></label>
+                        @Html.EditorFor(model => model.CreateDate, new { htmlAttributes = new { @class = "form-control datepicker", required = "required" } })
+                    </div>
+                </div>
+
+                <div style="padding-right:30px" class="col-md-6">
+                    <div style="margin-top:20px" class="input-group mb-3 py-2 rounded-pill shadow">
+                        <input type="file" name="file" id="file" onchange="validateFile()" class="form-control" />
+                        <label id="upload-label" for="upload" class="font-weight-light text-muted">Chọn ảnh <strong class="text-danger">*</strong></label>
+                        <div class="input-group-append">
+                            <label for="file" class="btn btn-light m-0 rounded-pill px-4"><small class="text-uppercase font-weight-bold text-muted">Chọn ảnh</small></label>
+                        </div>
+                    </div>
+                    <span style="font-size:12px" class="text-danger" id="error-file"></span>
+                    <div class="mt-4"><img id="img" src="@Url.Content(Model.Picture)" alt="" class="img-fluid rounded shadow-sm mx-auto d-block"></div>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="control-label">Chi tiết sản phẩm</label>
+                <textarea name="Description">@Model.Description</textarea>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="control-label">Đánh giá sản phẩm</label>
+                <textarea name="Review">@Model.Review</textarea>
+            </div>
+
+            <div class="form-group d-flex align-content-center justify-content-center py-5">
+                <input type="submit" value="Chỉnh sửa" class="btn btn-success mr-3" id="btnSubmit" />
+                <button type="button" class="btn btn-warning text-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Quay lại
+                </button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Cảnh báo</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Đang sửa dữ liệu. Bạn có muốn quay lại?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                @Html.ActionLink("Quay lại", "index", "productAdmin", null, htmlAttributes: new { @class = "btn btn-warning" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+@Html.Partial("_ShowError")
+<script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+<script>
+
+    CKEDITOR.replace('Description');
+    //CKEDITOR.instances['Description'].setData();
+    CKEDITOR.replace('Review');
+
+    $('.datepicker').datepicker();
+
+
+    function previewFile() {
+        let infoArea = document.getElementById('upload-label');
+        let file = document.getElementById("file").files[0];
+
+        let reader = new FileReader();
+        reader.onload = function () {
+            let output = document.getElementById('img');
+            output.src = reader.result;
+            infoArea.textContent = file.name;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>

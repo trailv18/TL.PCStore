@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCStore</title>
+    <link rel="icon" type="image/x-icon" href="~/Images/logo.png" />
+    <link href="~/Content/styles.css" rel="stylesheet" />
+    <link href="~/Content/custom-header.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <style>
+        #myBtn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            z-index: 99;
+            border: none;
+            outline: none;
+            background-color: #ed1b24;
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+            #myBtn:hover {
+                background-color: #243a76;
+            }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+            /* Handle on hover */
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+        .chat {
+            z-index: 1030;
+            position: fixed;
+            right: 30px;
+            bottom: 100px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button id="myBtn"><i style="font-size:20px" class="fas fa-arrow-up"></i></button>
+
+    <a href="https://m.me/pcstore11" target="_blank" class="chat" data-toggle="tooltip" data-placement="top" title="Chat cùng chúng tôi">
+        <i style="font-size: 50px" class="fab fa-facebook-messenger"></i>
+    </a>
+
+
+    <div style="padding: 0;" class="container-fluid">
+        @Html.Partial("_Header")
+    </div>
+
+
+    <div class="container">
+        @RenderBody()
+    </div>
+    @Html.Partial("_Footer")
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="~/Scripts/custom.js"></script>
+    <script src="~/Scripts/cart.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            viewCartHeader();
+        });
+
+        window.onscroll = function () { scrollFunction() };
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("myBtn").style.display = "block";
+            } else {
+                document.getElementById("myBtn").style.display = "none";
+            }
+        }
+
+        document.getElementById('myBtn').addEventListener("click", function () {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        });
+
+    </script>
+</body>
+</html>

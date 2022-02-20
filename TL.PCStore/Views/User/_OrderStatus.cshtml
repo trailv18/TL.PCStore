@@ -1,0 +1,169 @@
+﻿@model IEnumerable<TL.PCStore.Models.Order>
+
+@{
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+
+<style>
+    .btn-cancel {
+        padding: 5px;
+        border: 1px solid #ff6a00;
+        background-color: #ff6a00;
+        color: white;
+    }
+
+    .btn-read {
+        border: 1px solid #f4f4f4;
+        border-radius: 2px;
+        padding: 7px 13px;
+        background-color: #243a76;
+        color: white;
+    }
+
+    .modal-content {
+        width: 700px !important;
+    }
+</style>
+
+<div class="my-2">
+    @foreach (var item in Model)
+    {
+        <hr />
+        <div>
+            <div class="d-flex justify-content-end">
+                <p style="color: #243a76" class="h6">@item.OrderStatus</p>
+            </div>
+            <hr />
+            @foreach (var orderDetail in item.OrderDetails)
+            {
+                <div class="row">
+                    <div class="col-md-9 d-flex flex-row my-1">
+                        <img src="@Url.Content(orderDetail.Product.Picture)" width="100" height="100" />
+                        <p style="font-size:14px; padding-top: 10px">
+                            @Html.ActionLink(orderDetail.Product.Name, "getProductDetail", "products", new { url = orderDetail.Product.Url }, htmlAttributes: new { style = "font-size:14px;text-decoration: none; color: black;", @class = "link-product" })
+
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <label style="padding-top: 10px">@orderDetail.Qty</label>
+                        x
+                        <label>@String.Format(format, "{0:c0}", orderDetail.Price)</label>
+                    </div>
+
+                </div>
+            }
+
+            <div class="row d-flex justify-content-between">
+                <div class="col-md-3 d-flex align-items-end">
+                    <button class="btn-read" data-bs-toggle="modal" data-bs-target="#exampleModal_@item.Id">
+                        Chi tiết
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal_@item.Id" tabindex="-1" aria-labelledby="exampleModalLabel_@item.Id" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel_@item.Id">Chi tiết đơn hàng</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    @foreach (var orderDetail in item.OrderDetails)
+                                    {
+                                        <div class="row">
+                                            <div class="col-md-9 d-flex flex-row my-1">
+                                                <img src="@Url.Content(orderDetail.Product.Picture)" width="100" height="100" />
+                                                <p style="font-size:14px; padding-top: 10px">
+                                                    @Html.ActionLink(orderDetail.Product.Name, "getProductDetail", "products", new { url = orderDetail.Product.Url }, htmlAttributes: new { style = "font-size:14px;text-decoration: none; color: black;", @class = "link-product" })
+
+                                                </p>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label style="padding-top: 10px">@orderDetail.Qty</label>
+                                                x
+                                                <label>@String.Format(format, "{0:c0}", orderDetail.Price)</label>
+                                            </div>
+
+                                        </div>
+                                    }
+                                    <hr />
+                                    <div class="text-start">
+                                        <p class="h6">Thông tin nhận hàng:</p>
+                                        <p style="margin:0">Người nhận: @item.User.FullName</p>
+                                        <p style="margin: 0">Địa chỉ: @item.User.Address</p>
+                                        <p style="margin: 0">Số điện thoại: @item.User.Mobile</p>
+                                        <p style="margin: 0">Thanh toán: @item.Payment</p>
+                                        <p style="margin: 0">Ngày đặt hàng: @item.DateOrder</p>
+                                        @if (item.OrderStatus == "Đã nhận")
+                                        {
+                                            <p style="margin: 0">Ngày nhận hàng: @item.DateDelivery</p>
+                                        }
+                                        <h6 style="text-align:end">@item.OrderStatus</h6>
+                                        <p style="color: #243a76; text-align:end" class="h6">Tổng tiền: @String.Format(format, "{0:c0}", item.Total)</p>
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary mx-2" data-bs-dismiss="modal">Đóng</button>
+                                    @if (@ViewBag.Status == "Processing")
+                                    {
+                                        @Html.ActionLink("Hủy đơn hàng", "DeleteCategory", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-danger" })
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <p style="color: #243a76" class="h6">Tổng tiền: @String.Format(format, "{0:c0}", item.Total)</p>
+                    @if (@ViewBag.Status == "Processing")
+                    {
+                        <button class="btn-cancel" value="Đã hủy" id="btnCancel" onclick="cancelOrder('@item.Id')">Hủy đơn hàng</button>
+                    }
+                    @if (@ViewBag.Status == "Delivary")
+                    {
+                        <button class="btn-cancel" value="Đã giao" id="btnSuccess" onclick="successOrder('@item.Id')">Đã nhận</button>
+                    }
+                </div>
+            </div>
+        </div>
+        <hr />
+    }
+</div>
+
+
+<script>
+    function cancelOrder(id) {
+        let cancel = document.getElementById('btnCancel').value;
+        console.log(cancel);
+        $.ajax({
+            url: "/user/editStatus",
+            data: { id: id, status: cancel },
+            type: "POST",
+            success: function (result) {
+                alert(result);
+                location.reload();
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function successOrder(id) {
+        let success = document.getElementById('btnSuccess').value;
+        console.log(success);
+        $.ajax({
+            url: "/user/editStatus",
+            data: { id: id, status: success },
+            type: "POST",
+            success: function (result) {
+                alert(result);
+                location.reload();
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+</script>

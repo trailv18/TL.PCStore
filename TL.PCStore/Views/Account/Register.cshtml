@@ -1,0 +1,116 @@
+﻿@model TL.PCStore.Models.User
+
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PCStore</title>
+    <link rel="icon" type="image/x-icon" href="~/Images/logo.png" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+    <link href="~/Content/Admin/custom.css" rel="stylesheet" />
+    <script src="~/Scripts/Admin/validate-user.js"></script>
+    <style>
+        body {
+            background: #243a76;
+        }
+
+        .btn-login {
+            font-size: 0.9rem;
+            letter-spacing: 0.05rem;
+            padding: 0.75rem 1rem;
+        }
+        .field-icon {
+            float: right;
+            margin-left: -25px;
+            margin-right: 20px;
+            margin-top: -25px;
+            position: relative;
+            z-index: 2;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                <div class="card border-0 shadow rounded-3 my-5">
+                    <div class="card-body p-4 p-sm-5">
+                        <h4 class="card-title text-center mb-5">ĐĂNG KÝ</h4>
+                        @using (Html.BeginForm("register", "account", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control", oninput = "validateName()", required = "required", placeholder = "Họ tên" } })
+                                    <span style="font-size:12px" class="text-danger" id="error-name"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", oninput = "validateEmail()", required = "required", placeholder = "Email" } })
+                                    <span style="font-size:12px" class="text-danger" id="error-email"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", required = "required", oninput = "validatePassword()", placeholder = "Mật khẩu" })
+                                    <i class="fa fa-eye-slash field-icon" id="pass" onClick="showPwd('Password', 'pass')">   </i>
+                                    <span style="font-size:12px" class="text-danger" id="error-password"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input type="password" class="form-control" name="confPassword" id="confPassword" oninput="validateConfPassword()" required placeholder="Nhập lại mật khẩu" />
+                                    <i class="fa fa-eye-slash field-icon" id="cPassword" onClick="showPwd('confPassword', 'cPassword')">   </i>
+                                    <span style="font-size:12px" class="text-danger" id="error-confPassword"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group d-flex flex-row">
+                                <div class="col-md-6">
+                                    <button class="btn btn-info btn-block">Đăng ký</button>
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.ActionLink("Quay lại", "index", "home", null, htmlAttributes: new { @class = "btn btn-warning btn-block" })
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="login-subtitle">Đã có tài khoản? @Html.ActionLink("Đăng nhập", "login", "account") </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.Partial("_ShowError")
+
+    <script>
+        function showPwd(idPassword, idIcon) {
+            let password = document.getElementById(idPassword);
+            let icon = document.getElementById(idIcon);
+
+            if (password.type === "password") {
+                password.type = "text";
+                icon.classList.remove('fa', 'fa-eye-slash', 'field-icon');
+                icon.classList.add('fa', 'fa-eye', 'field-icon');
+            } else {
+                password.type = "password";
+                icon.classList.remove('fa', 'fa-eye', 'field-icon');
+                icon.classList.add('fa', 'fa-eye-slash', 'field-icon');
+            }
+        }
+    </script>
+</body>
+</html>
